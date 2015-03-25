@@ -11,8 +11,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 public class Gui extends JFrame{
-	public String  addInList(String currentName){
-		return currentName;
+	@SuppressWarnings("rawtypes")
+	ArrayList listFolders = new ArrayList();
+	@SuppressWarnings("unchecked")
+
+	public void  addInList(String currentName){
+		listFolders.add(currentName);
 	}
 	public void createGUI(){
 		
@@ -23,7 +27,7 @@ public class Gui extends JFrame{
 		  JPanel mainPanel = new JPanel();
           mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
  
-          JList northList = new JList();
+          JList northList = new JList(listFolders.toArray());
           northList.setLayoutOrientation(JList.VERTICAL);
           northList.setVisibleRowCount(0);
           JScrollPane northScroll = new JScrollPane(northList);

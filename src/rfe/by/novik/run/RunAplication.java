@@ -26,13 +26,13 @@ public class RunAplication {
 		FTPClient ftpClient = new FTPClient();
 		ZipArch zip = new ZipArch();
 		ftp.printComandInform();
-		gui.createGUI();
+		
 		try {
 			ftp.connectToFtp(ftpClient);
 			String currentName = "";
 			String path = "" ;
 			do {
-				
+				gui.createGUI();
 				currentName = ftp.readFromConsole(currentName);
 				path += currentName + "/";
 				if (ftp.isDirectory(ftpClient, path)) {

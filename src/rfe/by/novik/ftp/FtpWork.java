@@ -14,8 +14,11 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
+import rfe.by.novik.gui.Gui;
+
 public class FtpWork {
 	static Properties property = new Properties();
+	public Gui gui = new Gui();
 	public  void printComandInform() {
 		System.out.println("================================");
 		System.out.println("Information about functions of program: ");
@@ -59,6 +62,7 @@ public class FtpWork {
 	
 	public  void listDirectory(FTPClient ftpClient, String parentDir,
 			String currentDir) throws IOException {
+		
 		String dirToList = parentDir;
 		if (!currentDir.equals("")) {
 			dirToList += "/" + currentDir;
@@ -73,6 +77,7 @@ public class FtpWork {
 				}
 				if (aFile.isDirectory() || aFile.isFile()) {
 					System.out.println(currentFileName);
+					gui.addInList(currentFileName);
 				}
 			}
 		}
