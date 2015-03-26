@@ -47,6 +47,7 @@ public class FtpWork {
 	public  boolean isDirectory(FTPClient ftpClient, String parentDir) throws IOException{
 		int cntInnerFiles = 0;;
 		FTPFile[] subFiles = ftpClient.listFiles(parentDir);
+
 		if (subFiles != null && subFiles.length > 0) {
 			for (FTPFile aFile : subFiles) {
 				if (aFile.isDirectory() || aFile.isFile()) {
@@ -55,8 +56,10 @@ public class FtpWork {
 			}
 		}
 		if (cntInnerFiles >= 1){
+			
 			return true;}
 		else {
+			System.out.println(parentDir);
 			return false;}
 	}
 	
@@ -67,8 +70,9 @@ public class FtpWork {
 		if (!currentDir.equals("")) {
 			dirToList += "/" + currentDir;
 		}
+		
 		FTPFile[] subFiles = ftpClient.listFiles(dirToList);
-		if (subFiles != null && subFiles.length > 0) {
+			if (subFiles != null && subFiles.length > 0) {
 			for (FTPFile aFile : subFiles) {
 				String currentFileName = aFile.getName();
 				if (currentFileName.equals(".")
@@ -80,7 +84,9 @@ public class FtpWork {
 					gui.addInList(currentFileName);
 				}
 			}
+			gui.updateGUI();
 		}
+		
 	}
 	public  void connectToFtp(FTPClient ftpClient) throws IOException {
 		loadProperty();
@@ -89,6 +95,7 @@ public class FtpWork {
 		String user = property.getProperty("user");
 		String pass = property.getProperty("pass");
 		ftpClient.connect(server, port);
+		ftpClient.enterLocalPassiveMode();
 		int replyCode = ftpClient.getReplyCode();
 		if (!FTPReply.isPositiveCompletion(replyCode)) {
 			System.out.println("Connection failed");

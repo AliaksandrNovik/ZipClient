@@ -4,7 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipOutputStream;
 
-import javax.swing.JFrame;
+
 
 import org.apache.commons.net.ftp.FTPClient;
 
@@ -14,14 +14,14 @@ import rfe.by.novik.zip.ZipArch;
 
 
 public class RunAplication {
-	
+
 
 	@SuppressWarnings({  "static-access" })
 	public static void main(String[] args) throws IOException{
 		Gui gui = new Gui();
-		FileOutputStream fos = new FileOutputStream("Output.zip",true);
+		FileOutputStream fos = new FileOutputStream("Output.zip");
 		ZipOutputStream zos = new ZipOutputStream(fos);
-		
+
 		FtpWork ftp = new FtpWork();
 		FTPClient ftpClient = new FTPClient();
 		ZipArch zip = new ZipArch();
@@ -32,7 +32,6 @@ public class RunAplication {
 			String currentName = "";
 			String path = "" ;
 			do {
-				gui.createGUI();
 				currentName = ftp.readFromConsole(currentName);
 				path += currentName + "/";
 				if (ftp.isDirectory(ftpClient, path)) {
@@ -47,7 +46,7 @@ public class RunAplication {
 		}  finally {
 			ftp.disconnectFromFtp(ftpClient);
 		}
-		
+
 	}
 }
 
