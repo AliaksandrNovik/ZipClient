@@ -1,5 +1,8 @@
 package rfe.by.novik.ftp;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +13,8 @@ import java.io.OutputStream;
 import java.util.Properties;
 import java.util.Scanner;
 
+import javax.swing.JList;
+
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -19,6 +24,8 @@ import rfe.by.novik.gui.Gui;
 public class FtpWork {
 	static Properties property = new Properties();
 	public Gui gui = new Gui();
+	public FTPClient ftpClient = new FTPClient();
+	public String folderClicked = "";
 	public  void printComandInform() {
 		System.out.println("================================");
 		System.out.println("Information about functions of program: ");
@@ -44,7 +51,7 @@ public class FtpWork {
 	    }
 	}
 	
-	public  boolean isDirectory(FTPClient ftpClient, String parentDir) throws IOException{
+	public  boolean isDirectory( String parentDir) throws IOException{
 		int cntInnerFiles = 0;;
 		FTPFile[] subFiles = ftpClient.listFiles(parentDir);
 
@@ -56,16 +63,34 @@ public class FtpWork {
 			}
 		}
 		if (cntInnerFiles >= 1){
-			
 			return true;}
 		else {
 			System.out.println(parentDir);
-			return false;}
+			return false;} 
 	}
+    MouseListener mouseListener = new MouseAdapter() {
+        public void mouseClicked(MouseEvent mouseEvent) {
+        try{ 
+        	JList theList = (JList) mouseEvent.getSource();
+          
+        	if (mouseEvent.getClickCount() == 2) {
+        	  int index = theList.locationToIndex(mouseEvent.getPoint());
+              if (index >= 0) {
+                folderClicked +=  theList.getModel().getElementAt(index).toString() + "/" ;
+                
+                System.out.println("Double-clicked on: " + folderClicked.toString());
+                listDirectory("", "/" + folderClicked.toString());
+              }
+           
+          }
+        }catch(IOException io){
+        	
+        }
+        }
+      };
 	
-	public  void listDirectory(FTPClient ftpClient, String parentDir,
+	public  void listDirectory( String parentDir,
 			String currentDir) throws IOException {
-		
 		String dirToList = parentDir;
 		if (!currentDir.equals("")) {
 			dirToList += "/" + currentDir;
@@ -73,6 +98,7 @@ public class FtpWork {
 		
 		FTPFile[] subFiles = ftpClient.listFiles(dirToList);
 			if (subFiles != null && subFiles.length > 0) {
+				
 			for (FTPFile aFile : subFiles) {
 				String currentFileName = aFile.getName();
 				if (currentFileName.equals(".")
@@ -81,15 +107,17 @@ public class FtpWork {
 				}
 				if (aFile.isDirectory() || aFile.isFile()) {
 					System.out.println(currentFileName);
-					gui.addInList(currentFileName);
+					gui.addInList(currentFileName); 
 				}
 			}
-			gui.updateGUI();
+			gui.updateGUI(mouseListener);
+			gui.addInList("\n");
 		}
 		
 	}
-	public  void connectToFtp(FTPClient ftpClient) throws IOException {
+	public  void connectToFtp() throws IOException {
 		loadProperty();
+		gui.updateGUI(mouseListener);
 		String server = property.getProperty("server");
 		int port = Integer.parseInt(property.getProperty("port"));
 		String user = property.getProperty("user");
@@ -109,7 +137,7 @@ public class FtpWork {
 
 	}
 	@SuppressWarnings("unused")
-	public  void downloadFileFromFtp(FTPClient ftpClient, String path,
+	public  void downloadFileFromFtp( String path,
 			String currentName)
 			throws IOException {
 		
@@ -134,7 +162,7 @@ public class FtpWork {
 		outputStream2.close();
 		inputStream.close();
 	}
-	public  void disconnectFromFtp(FTPClient ftpClient){
+	public  void disconnectFromFtp(){
 		try {
 			if (ftpClient.isConnected()) {
 				ftpClient.logout();
@@ -144,4 +172,5 @@ public class FtpWork {
 			ex.printStackTrace();
 		}
 	}
+	
 }

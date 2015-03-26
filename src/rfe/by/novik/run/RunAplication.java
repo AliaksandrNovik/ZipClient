@@ -1,50 +1,51 @@
 package rfe.by.novik.run;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipOutputStream;
 
 
 
-import org.apache.commons.net.ftp.FTPClient;
+
+
+import javax.swing.JList;
 
 import rfe.by.novik.ftp.FtpWork;
-import rfe.by.novik.gui.Gui;
 import rfe.by.novik.zip.ZipArch;
 
 
 public class RunAplication {
 
-
 	@SuppressWarnings({  "static-access" })
 	public static void main(String[] args) throws IOException{
-		Gui gui = new Gui();
 		FileOutputStream fos = new FileOutputStream("Output.zip");
 		ZipOutputStream zos = new ZipOutputStream(fos);
 
 		FtpWork ftp = new FtpWork();
-		FTPClient ftpClient = new FTPClient();
 		ZipArch zip = new ZipArch();
 		ftp.printComandInform();
-		
+
 		try {
-			ftp.connectToFtp(ftpClient);
+			ftp.connectToFtp();
 			String currentName = "";
-			String path = "" ;
+			String path = "/" ; 
 			do {
-				currentName = ftp.readFromConsole(currentName);
+				//currentName = ftp.readFromConsole(currentName);
 				path += currentName + "/";
-				if (ftp.isDirectory(ftpClient, path)) {
+				if (ftp.isDirectory( path)) {
 					System.out.println(currentName + " " + path);
-					ftp.listDirectory(ftpClient, path, "");
-				} else {
-					ftp.downloadFileFromFtp(ftpClient, path, currentName);
+					ftp.listDirectory( path, "");
+				} else { 
+					ftp.downloadFileFromFtp( path, currentName);
 					zip.addToZipFile(currentName, zos);
 					break;
 				}
 			} while (!currentName.equals("Exit"));
 		}  finally {
-			ftp.disconnectFromFtp(ftpClient);
+			ftp.disconnectFromFtp();
 		}
 
 	}
