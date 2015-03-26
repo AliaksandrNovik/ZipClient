@@ -30,19 +30,22 @@ public class RunAplication {
 
 		try {
 			ftp.connectToFtp();
+			
 			String currentName = "";
-			String path = "/" ; 
+			String path = "" ; 
+			
 			do {
-				//currentName = ftp.readFromConsole(currentName);
+			  ftp.listDirectory(path, "/");
+				currentName = ftp.readFromConsole(currentName);
 				path += currentName + "/";
-				if (ftp.isDirectory( path)) {
+				/*if (ftp.isDirectory( path)) {
 					System.out.println(currentName + " " + path);
 					ftp.listDirectory( path, "");
 				} else { 
 					ftp.downloadFileFromFtp( path, currentName);
 					zip.addToZipFile(currentName, zos);
 					break;
-				}
+				}*/
 			} while (!currentName.equals("Exit"));
 		}  finally {
 			ftp.disconnectFromFtp();

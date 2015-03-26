@@ -77,7 +77,6 @@ public class FtpWork {
         	  int index = theList.locationToIndex(mouseEvent.getPoint());
               if (index >= 0) {
                 folderClicked +=  theList.getModel().getElementAt(index).toString() + "/" ;
-                
                 System.out.println("Double-clicked on: " + folderClicked.toString());
                 listDirectory("", "/" + folderClicked.toString());
               }
