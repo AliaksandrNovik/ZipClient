@@ -1,5 +1,7 @@
 package rfe.by.novik.ftp;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -13,12 +15,16 @@ import java.io.OutputStream;
 import java.util.Properties;
 import java.util.Scanner;
 
+import javax.swing.AbstractButton;
+import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
+import rfe.by.novik.checkbox.ParameterActionListener;
 import rfe.by.novik.gui.Gui;
 
 public class FtpWork {
@@ -68,8 +74,10 @@ public class FtpWork {
 			System.out.println(parentDir);
 			return false;} 
 	}
-    MouseListener mouseListener = new MouseAdapter() {
+
+	MouseListener mouseListener = new MouseAdapter() {
         public void mouseClicked(MouseEvent mouseEvent) {
+        
         try{ 
         	JList theList = (JList) mouseEvent.getSource();
           
@@ -87,7 +95,20 @@ public class FtpWork {
         }
         }
       };
-	
+  	ActionListener action = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+        	System.out.println("Entered");
+            if (gui.getCheckList().isSelected()) {
+                JOptionPane.showMessageDialog(new JFrame(), "JCheckBox is selected");
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "JCheckBox is NOT selected");
+                System.out.println("JCheckBox is selected");
+            }
+        }
+	};
+      
+    
 	public  void listDirectory( String parentDir,
 			String currentDir) throws IOException {
 		String dirToList = parentDir;
@@ -111,6 +132,8 @@ public class FtpWork {
 			}
 			gui.updateGUI(mouseListener);
 			gui.addInList("\n");
+			gui.getDownAndZip().addActionListener(new ParameterActionListener(parentDir,  gui));
+			downloadFileFromFtp("/pub/zz", "/marker.txt");
 		}
 		
 	}
@@ -135,31 +158,16 @@ public class FtpWork {
 		}
 
 	}
-	@SuppressWarnings("unused")
+	
+
+	
 	public  void downloadFileFromFtp( String path,
 			String currentName)
 			throws IOException {
-		
-		final int partStream = 4096;
-		String remoteFile1 = path.substring(0, path.length() - 1);
-		File downloadFile1 = new File(currentName);
-		OutputStream outputStream2 = new BufferedOutputStream(
-				new FileOutputStream(downloadFile1));
-		InputStream inputStream = ftpClient.retrieveFileStream(remoteFile1);
-		byte[] bytesArray = new byte[partStream];
-		int bytesRead = -1;
-		System.out.println("Load of " + currentName + "...");
-		
-		while ((bytesRead = inputStream.read(bytesArray)) != -1) {
-			outputStream2.write(bytesArray, 0, bytesRead);
-		}
-		boolean success = ftpClient.completePendingCommand();
-		if (success) {
-			System.out.println("File " + currentName
-					+ " has been downloaded successfully.");
-		}
-		outputStream2.close();
-		inputStream.close();
+		  FileOutputStream fos = null;  
+		fos = new FileOutputStream(currentName);  
+	    boolean download = ftpClient.retrieveFile("uploadedFile.txt",  
+	      fos);  
 	}
 	public  void disconnectFromFtp(){
 		try {
