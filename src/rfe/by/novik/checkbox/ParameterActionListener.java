@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import rfe.by.novik.ftp.FtpWork;
 import rfe.by.novik.gui.Gui;
+import rfe.by.novik.zip.ZipArch;
 
 public class ParameterActionListener implements ActionListener {
 
@@ -18,14 +19,21 @@ public class ParameterActionListener implements ActionListener {
 	private Gui guiAction ;
 	private FtpWork ftpAction ;
 	private ArrayList<String> inputName;
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.out.println(guiAction.getNorthList().getSelectedValue());
+		String nameJOptionPane.showInputDialog(new JFrame(), "asd");
+		  String name = JOptionPane.showInputDialog(frame, "What's your name?");
+
+		    // get the user's input. note that if they press Cancel, 'name' will be null
+		    System.out.printf("The user's name is '%s'.\n", name);
 		if (!inputName.contains(guiAction.getNorthList().getSelectedValue())){
 			try {
-
+				ZipArch zip = new ZipArch();
 				ftpAction.downloadFileFromFtp(parentDir, guiAction.getNorthList().getSelectedValue().toString());
 				inputName.add(guiAction.getNorthList().getSelectedValue().toString());
+				zip.addToZipFile(guiAction.getNorthList().getSelectedValue().toString());
 			} catch (IOException e1) {
 				JOptionPane.showMessageDialog(new JFrame(), "Exception in path of file");
 			}

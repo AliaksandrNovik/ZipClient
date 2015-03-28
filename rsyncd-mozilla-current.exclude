@@ -1,0 +1,10 @@
++ .htaccess
++ firefox
++ firefox/releases
++ firefox/releases/latest
++ thunderbird
++ thunderbird/releases
++ thunderbird/releases/latest
++ zz
++ zz/*
+- *

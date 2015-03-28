@@ -1,41 +1,29 @@
 package rfe.by.novik.gui;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import rfe.by.novik.checkbox.*;
-import rfe.by.novik.ftp.FtpWork;
 @SuppressWarnings("serial")
 public class Gui extends JFrame {
 	public boolean isDoubleClicked = false;
-	JFrame frame = new JFrame("ZipClient");
-	JList northList = new JList();
+	private JFrame frame = new JFrame("ZipClient");
+	private JList<?> northList = new JList<Object>();
 
-	JPanel mainPanel = new JPanel();
-	Object folderClicked = null;
+	private JPanel mainPanel = new JPanel();
 	private JButton downAndZip = new JButton("Download and add to Zip");
-	CheckBoxListRenderer checkList = new CheckBoxListRenderer();
-
-
-
-
-	ArrayList listFolders = new ArrayList();
+	private CheckBoxListRenderer checkList = new CheckBoxListRenderer();
+	private ArrayList<String> listFolders = new ArrayList<String>();
 	public Gui(){}
 	
 	public void  addInList(String currentName){
@@ -43,9 +31,12 @@ public class Gui extends JFrame {
 	}
 
 	public void updateGUI(MouseListener mouse){
+		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-		northList = new JList(listFolders.toArray());
+
+
+		northList = new JList<Object>(listFolders.toArray());
 		northList.addMouseListener(mouse);
 		JScrollPane northScroll = new JScrollPane(northList);
 		northList.setLayoutOrientation(JList.VERTICAL);
@@ -60,10 +51,10 @@ public class Gui extends JFrame {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		northList.setCellRenderer(checkList);
-						
+
 	}
 	
-      
+	
 	
 
 	public JButton getDownAndZip() {
@@ -74,7 +65,7 @@ public class Gui extends JFrame {
 		return checkList;
 	}
 	
-	public JList getNorthList() {
+	public JList<?> getNorthList() {
 		return northList;
 	}
 
