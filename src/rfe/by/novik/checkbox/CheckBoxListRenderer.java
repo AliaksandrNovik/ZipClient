@@ -30,6 +30,7 @@ public class CheckBoxListRenderer extends JCheckBox implements ListCellRenderer
 		setForeground(list.getForeground());
 		setSelected(isSelected);
 		setEnabled(list.isEnabled());
+		setEnabled(list.isDisplayable());
 		return this;
 		
 	}

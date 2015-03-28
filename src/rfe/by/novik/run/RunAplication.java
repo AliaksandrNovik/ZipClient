@@ -37,7 +37,7 @@ public class RunAplication {
 			do {
 			  ftp.listDirectory(path, "/");
 				currentName = ftp.readFromConsole(currentName);
-				path += currentName + "/";
+				//path += currentName + "/";
 				/*if (ftp.isDirectory( path)) {
 					System.out.println(currentName + " " + path);
 					ftp.listDirectory( path, "");

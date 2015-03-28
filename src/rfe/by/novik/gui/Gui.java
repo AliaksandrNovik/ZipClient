@@ -50,7 +50,6 @@ public class Gui extends JFrame {
 		JScrollPane northScroll = new JScrollPane(northList);
 		northList.setLayoutOrientation(JList.VERTICAL);
 		northList.setVisibleRowCount(0);
-	
 		northScroll.setPreferredSize(new Dimension(100, 100));
 		mainPanel.removeAll();
 		mainPanel.add(northScroll);

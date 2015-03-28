@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -20,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -32,6 +34,7 @@ public class FtpWork {
 	public Gui gui = new Gui();
 	public FTPClient ftpClient = new FTPClient();
 	public String folderClicked = "";
+	public ArrayList<String> listDownloadedFiles = new ArrayList<String>();
 	public  void printComandInform() {
 		System.out.println("================================");
 		System.out.println("Information about functions of program: ");
@@ -95,19 +98,7 @@ public class FtpWork {
         }
         }
       };
-  	ActionListener action = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-        	System.out.println("Entered");
-            if (gui.getCheckList().isSelected()) {
-                JOptionPane.showMessageDialog(new JFrame(), "JCheckBox is selected");
-            } else {
-                JOptionPane.showMessageDialog(new JFrame(), "JCheckBox is NOT selected");
-                System.out.println("JCheckBox is selected");
-            }
-        }
-	};
-      
+
     
 	public  void listDirectory( String parentDir,
 			String currentDir) throws IOException {
@@ -132,9 +123,11 @@ public class FtpWork {
 			}
 			gui.updateGUI(mouseListener);
 			gui.addInList("\n");
-			gui.getDownAndZip().addActionListener(new ParameterActionListener(parentDir,  gui));
-			downloadFileFromFtp("/pub/zz", "/marker.txt");
+			System.out.println("parent = " + folderClicked.toString());
+			gui.getDownAndZip().addActionListener(new ParameterActionListener("/" + folderClicked.toString(),  gui, this, listDownloadedFiles));
 		}
+		
+			
 		
 	}
 	public  void connectToFtp() throws IOException {
@@ -164,10 +157,25 @@ public class FtpWork {
 	public  void downloadFileFromFtp( String path,
 			String currentName)
 			throws IOException {
-		  FileOutputStream fos = null;  
-		fos = new FileOutputStream(currentName);  
-	    boolean download = ftpClient.retrieveFile("uploadedFile.txt",  
-	      fos);  
+		
+		   String remoteFile2 = path + currentName;
+           File downloadFile2 = new File("D:/" + currentName);
+           OutputStream outputStream2 = new BufferedOutputStream(new FileOutputStream(downloadFile2));
+           System.out.println(remoteFile2 + "/n" + currentName);
+           InputStream inputStream = ftpClient.retrieveFileStream(remoteFile2);
+           byte[] bytesArray = new byte[4096];
+           int bytesRead = -1;
+           while ((bytesRead = inputStream.read(bytesArray)) != -1) {
+               outputStream2.write(bytesArray, 0, bytesRead);
+           }
+
+          boolean success = ftpClient.completePendingCommand();
+           if (success) {
+               System.out.println("File " +remoteFile2 +" has been downloaded successfully.");
+           }
+           outputStream2.close();
+           inputStream.close();
+           
 	}
 	public  void disconnectFromFtp(){
 		try {
