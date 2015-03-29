@@ -13,15 +13,13 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 
 import rfe.by.novik.gui.Gui;
 
 @SuppressWarnings("rawtypes")
 public class CheckBoxListRenderer extends JCheckBox implements ListCellRenderer
 {
-	private ArrayList<String> listFiles = new ArrayList<String>(); 
-	
-
 	private static final long serialVersionUID = 6604709223091382270L;
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean hasFocus)
@@ -40,7 +38,6 @@ public class CheckBoxListRenderer extends JCheckBox implements ListCellRenderer
             	setSelected(isSelected);
             	setEnabled(!list.isEnabled());
             }
-			
 		
 			return this;
 	}
